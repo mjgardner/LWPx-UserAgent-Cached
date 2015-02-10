@@ -49,7 +49,7 @@ use Storable qw(nfreeze thaw);
 use Moo;
 use MooX::Types::MooseLike::Base qw(HasMethods HashRef);
 use namespace::clean;
-extends 'LWP::UssrAgent';
+extends 'LWP::UserAgent';
 
 =attr cache
 
