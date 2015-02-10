@@ -46,7 +46,10 @@ Inspiration for this class.
 =cut
 
 use CHI;
-use HTTP::Status ':constants';
+use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
+
+# work around RT#43310
+## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
 use List::Util 1.33 'any';
 use Storable qw(nfreeze thaw);
 use Moo;
