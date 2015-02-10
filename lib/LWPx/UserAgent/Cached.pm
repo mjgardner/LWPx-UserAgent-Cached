@@ -14,7 +14,7 @@ use utf8;
     use LWPx::UserAgent::Cached;
     use CHI;
 
-    my $ua = LWP::UserAgent::Cached->new(
+    my $ua = LWPx::UserAgent::Cached->new(
         cache => CHI->new(
             driver => 'File', root_dir => '/tmp/cache', expires_in => '1d',
         ),
@@ -139,6 +139,13 @@ inclusive) or cache everything. Defaults to true.
 =cut
 
 has positive_cache => ( is => 'rw', isa => Bool, default => 1 );
+
+=head1 HANDLERS
+
+This module works by adding C<request_send> and C<response_done>
+L<handlers|LWP::UserAgent/Handlers> method that run on successful HTTP
+C<GET> requests. If you need to modify or remove these handlers you may use
+L<LWP::UserAgent's C<handlers>|LWP::UserAgent/Handlers> method.
 
 =for Pod::Coverage BUILD
 

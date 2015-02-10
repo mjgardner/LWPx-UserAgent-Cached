@@ -11,7 +11,7 @@ version 0.001
     use LWPx::UserAgent::Cached;
     use CHI;
 
-    my $ua = LWP::UserAgent::Cached->new(
+    my $ua = LWPx::UserAgent::Cached->new(
         cache => CHI->new(
             driver => 'File', root_dir => '/tmp/cache', expires_in => '1d',
         ),
@@ -78,6 +78,13 @@ inclusive) or cache everything. Defaults to true.
 - [WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached)
 
     Inspiration for this class.
+
+# HANDLERS
+
+This module works by adding `request_send` and `response_done`
+[handlers](https://metacpan.org/pod/LWP::UserAgent#Handlers) method that run on successful HTTP
+`GET` requests. If you need to modify or remove these handlers you may use
+[LWP::UserAgent's `handlers`](https://metacpan.org/pod/LWP::UserAgent#Handlers) method.
 
 # SUPPORT
 
