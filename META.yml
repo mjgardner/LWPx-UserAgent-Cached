@@ -1,0 +1,44 @@
+---
+abstract: 'Subclass of LWP::UserAgent that caches HTTP GET requests'
+author:
+  - 'Mark Gardner <mjgardner@cpan.org>'
+build_requires:
+  Carp: '0'
+  File::Spec: '0'
+  Find::Lib: '0'
+  IO::Handle: '0'
+  IPC::Open3: '0'
+  Path::Class: '0'
+  Scalar::Util: '0'
+  Test::More: '0.94'
+  Test::Requires: '0'
+  constant: '0'
+  lib: '0'
+  perl: '5.012'
+  strict: '0'
+  warnings: '0'
+configure_requires:
+  ExtUtils::MakeMaker: '0'
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 5.031, CPAN::Meta::Converter version 2.143240'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: LWPx-UserAgent-Cached
+requires:
+  CHI: '0'
+  HTTP::Status: '0'
+  LWP::UserAgent: '0'
+  List::Util: '1.33'
+  Modern::Perl: '0'
+  Moo: '0'
+  MooX::Types::MooseLike::Base: '0'
+  Storable: '0'
+  namespace::clean: '0'
+  perl: '5.012'
+  utf8: '0'
+resources:
+  bugtracker: https://github.com/mjgardner/LWPx-UserAgent-Cached/issues
+  repository: git://github.com/mjgardner/LWPx-UserAgent-Cached.git
+version: '0.001'
