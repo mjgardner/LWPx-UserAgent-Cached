@@ -45,9 +45,10 @@ Inspiration for this class.
 
 use CHI;
 use HTTP::Status ':constants';
+use List::Util 1.33 'any';
 use Storable qw(nfreeze thaw);
 use Moo;
-use MooX::Types::MooseLike::Base qw(HasMethods HashRef);
+use MooX::Types::MooseLike::Base qw(Bool HasMethods HashRef Maybe);
 use namespace::clean;
 extends 'LWP::UserAgent';
 
