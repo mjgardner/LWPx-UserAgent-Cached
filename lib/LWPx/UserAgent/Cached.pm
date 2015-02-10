@@ -140,10 +140,9 @@ inclusive) or cache everything. Defaults to true.
 
 has positive_cache => ( is => 'rw', isa => Bool, default => 1 );
 
-sub FOREIGNBUILDARGS {
-    shift;
-    return 'HASH' eq ref $_[0] ? %{ $_[0] } : @_;
-}
+=for Pod::Coverage BUILD
+
+=cut
 
 sub BUILD {
     my $self = shift;
@@ -205,6 +204,16 @@ sub BUILD {
     );
 
     return;
+}
+
+=for Pod::Coverage FOREIGNBUILDARGS
+
+=cut
+
+## no critic (Subroutines::RequireArgUnpacking)
+sub FOREIGNBUILDARGS {
+    shift;
+    return 'HASH' eq ref $_[0] ? %{ $_[0] } : @_;
 }
 
 1;
