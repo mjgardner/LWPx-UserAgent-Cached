@@ -11,7 +11,7 @@ use utf8;
 
     use LWPx::UserAgent::Cached;
     use CHI;
-    
+
     my $ua = LWP::UserAgent::Cached->new(
         cache => CHI->new(
             driver => 'File', root_dir => '/tmp/cache', expires_in => '1d',
