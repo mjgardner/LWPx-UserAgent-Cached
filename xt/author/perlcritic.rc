@@ -7,9 +7,9 @@ perltidyrc = xt/author/perltidy.rc
 
 # using Modern::Perl
 [Compatibility::PerlMinimumVersionAndWhy]
-above_version = 5.014
+above_version = 5.010
 [Compatibility::PodMinimumVersion]
-above_version = 5.014
+above_version = 5.010
 
 [Documentation::RequirePodSections]
 lib_sections = NAME | VERSION | SYNOPSIS | DESCRIPTION | SUPPORT | AUTHOR | COPYRIGHT AND LICENSE

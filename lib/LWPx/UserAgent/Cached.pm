@@ -2,7 +2,7 @@ package LWPx::UserAgent::Cached;
 
 # ABSTRACT: Subclass of LWP::UserAgent that caches HTTP GET requests
 
-use Modern::Perl '2012';    ## no critic (Modules::ProhibitUseQuotedVersion)
+use Modern::Perl '2010';    ## no critic (Modules::ProhibitUseQuotedVersion)
 
 # VERSION
 use utf8;
@@ -172,17 +172,20 @@ sub BUILD {
         response_done => sub {
             return if not my $response = shift;
 
-            if (    not $response->header('client-transfer-encoding')
-                and 'ARRAY' eq ref $resp->header('client-transfer-encoding')
+            if ( not $response->header('client-transfer-encoding')
+                and 'ARRAY' eq
+                ref $response->header('client-transfer-encoding')
                 and any { 'chunked' eq $_ }
                 @{ $response->header('client-transfer-encoding') } )
             {
                 for ( $response->header('size') ) {
-                    return when undef
-                        and not $self->cache_undef_content_length;
-                    return when 0
+                    return
+                        if not defined and $self->cache_undef_content_length;
+                    return
+                        if 0 == $_
                         and not $self->cache_zero_content_length;
-                    return when $_ != length $response->content
+                    return
+                        if $_ != length $response->content
                         and not $self->cache_mismatch_content_length;
                 }
             }
