@@ -7,6 +7,8 @@ use Modern::Perl '2011';    ## no critic (Modules::ProhibitUseQuotedVersion)
 # VERSION
 use utf8;
 
+## no critic (Bangs::ProhibitCommentedOutCode)
+
 =head1 SYNOPSIS
 
     use LWPx::UserAgent::Cached;
