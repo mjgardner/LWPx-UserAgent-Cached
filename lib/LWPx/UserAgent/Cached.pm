@@ -52,7 +52,7 @@ use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
 ## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
 use List::Util 1.33 'any';
 use Storable qw(nfreeze thaw);
-use Moo;
+use Moo 1.004005;
 use MooX::Types::MooseLike::Base qw(Bool HasMethods HashRef Maybe);
 use namespace::clean;
 extends 'LWP::UserAgent';

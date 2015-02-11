@@ -4,7 +4,7 @@ LWPx::UserAgent::Cached - Subclass of LWP::UserAgent that caches HTTP GET reques
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 
