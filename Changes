@@ -1,6 +1,8 @@
 Revision history for perl distribution LWPx-UserAgent-Role-Cached
 
 {{$NEXT}}
+
+0.002     2015-02-10 21:40:24-05:00 America/New_York (TRIAL RELEASE)
     - require a version of Moo that allows undef defaults in attributes
     - use faster Type::Tiny rather than MooX::Types::MooseLike
 0.001     2015-02-10 18:22:57-05:00 America/New_York (TRIAL RELEASE)
