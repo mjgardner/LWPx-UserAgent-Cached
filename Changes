@@ -1,6 +1,6 @@
 Revision history for perl distribution LWPx-UserAgent-Role-Cached
 
-{{$NEXT}}
+0.003     2015-02-11 22:15:47-05:00 America/New_York
     - more micro-optimizations with Sereal replacing Storable
 0.002     2015-02-10 21:40:24-05:00 America/New_York (TRIAL RELEASE)
     - require a version of Moo that allows undef defaults in attributes
