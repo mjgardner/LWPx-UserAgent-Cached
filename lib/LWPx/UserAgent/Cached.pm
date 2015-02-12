@@ -51,9 +51,10 @@ use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
 # work around RT#43310
 ## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
 use List::Util 1.33 'any';
-use Storable qw(nfreeze thaw);
+use Sereal qw(sereal_encode_with_object sereal_decode_with_object);
 use Moo 1.004005;
-use Types::Standard qw(Bool HasMethods HashRef Maybe);
+use Sub::Quote 'qsub';
+use Types::Standard qw(Bool HasMethods HashRef InstanceOf Maybe);
 use namespace::clean;
 extends 'LWP::UserAgent';
 
@@ -140,12 +141,20 @@ inclusive) or cache everything. Defaults to true.
 
 has positive_cache => ( is => 'rw', isa => Bool, default => 1 );
 
+for (qw(Encoder Decoder)) {
+    has "_\l$_" => (
+        is      => 'lazy',
+        isa     => InstanceOf ["Sereal::$_"],
+        default => qsub "Sereal::$_->new",
+    );
+}
+
 =head1 HANDLERS
 
 This module works by adding C<request_send> and C<response_done>
-L<handlers|LWP::UserAgent/Handlers> method that run on successful HTTP
-C<GET> requests. If you need to modify or remove these handlers you may use
-L<LWP::UserAgent's C<handlers>|LWP::UserAgent/Handlers> method.
+L<handlers|LWP::UserAgent/Handlers> method that run on successful
+HTTP C<GET> requests. If you need to modify or remove these handlers you may
+use L<LWP::UserAgent's C<handlers>|LWP::UserAgent/Handlers> method.
 
 =for Pod::Coverage BUILD
 
@@ -156,11 +165,8 @@ sub BUILD {
 
     $self->add_handler(    # load from cache on each GET request
         request_send => sub {
-            my $original_request = shift;
-            my $request          = $original_request;
-
+            my $request = shift;
             $self->_set_is_cached(0);
-
             if ( not $self->ref_in_cache_key ) {
                 my $clone = $request->clone;
                 $clone->header( Referer => undef );
@@ -168,12 +174,13 @@ sub BUILD {
             }
 
             my $response = $self->cache->get($request);
-            if ($response) { $response = thaw($response) }
+            $response
+                &&= sereal_decode_with_object( $self->_decoder, $response );
+
             return
                    if not($response)
                 or $response->code < HTTP_OK
                 or $response->code > HTTP_MOVED_PERMANENTLY;
-
             $self->_set_is_cached(1);
             return $response;
         },
@@ -184,11 +191,12 @@ sub BUILD {
         response_done => sub {
             return if not my $response = shift;
 
-            if ( not $response->header('client-transfer-encoding')
-                and 'ARRAY' eq
-                ref $response->header('client-transfer-encoding')
-                and any { 'chunked' eq $_ }
-                @{ $response->header('client-transfer-encoding') } )
+            if (not( $response->header('client-transfer-encoding')
+                    and 'ARRAY' eq
+                    ref $response->header('client-transfer-encoding')
+                    and any { 'chunked' eq $_ }
+                    @{ $response->header('client-transfer-encoding') } )
+                )
             {
                 for ( $response->header('size') ) {
                     return
@@ -203,8 +211,8 @@ sub BUILD {
             }
 
             $response->decode;
-            $self->cache->set( $response->request->as_string,
-                nfreeze($response) );
+            $self->cache->set( $response->request->as_string =>
+                    sereal_encode_with_object( $self->_encoder, $response ) );
             return;
         },
         ( m_method => 'GET', m_code => 2 ),

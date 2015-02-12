@@ -1,6 +1,6 @@
 package TestCache;
 
-use Storable qw( nfreeze thaw );
+use Sereal qw(encode_sereal decode_sereal);
 
 sub new {
     my $class = shift;
@@ -17,9 +17,9 @@ sub set {
     my $key   = shift;
     my $value = shift;    # an HTTP::Response
 
-    my $res = thaw($value);
+    my $res = decode_sereal($value);
     $res->content("DUMMY");
-    $self->{$key} = nfreeze($res);
+    $self->{$key} = encode_sereal($res);
 }
 
 sub get {

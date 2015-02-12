@@ -4,7 +4,7 @@ LWPx::UserAgent::Cached - Subclass of LWP::UserAgent that caches HTTP GET reques
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # SYNOPSIS
 
@@ -82,9 +82,9 @@ inclusive) or cache everything. Defaults to true.
 # HANDLERS
 
 This module works by adding `request_send` and `response_done`
-[handlers](https://metacpan.org/pod/LWP::UserAgent#Handlers) method that run on successful HTTP
-`GET` requests. If you need to modify or remove these handlers you may use
-[LWP::UserAgent's `handlers`](https://metacpan.org/pod/LWP::UserAgent#Handlers) method.
+[handlers](https://metacpan.org/pod/LWP::UserAgent#Handlers) method that run on successful
+HTTP `GET` requests. If you need to modify or remove these handlers you may
+use [LWP::UserAgent's `handlers`](https://metacpan.org/pod/LWP::UserAgent#Handlers) method.
 
 # SUPPORT
 
