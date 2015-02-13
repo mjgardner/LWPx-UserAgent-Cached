@@ -53,7 +53,7 @@ use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
 use List::Util 1.33 'any';
 use Sereal qw(sereal_encode_with_object sereal_decode_with_object);
 use Moo 1.004005;
-use Sub::Quote 'qsub';
+use Sub::Quote 1.005000 'qsub';
 use Types::Standard qw(Bool HasMethods HashRef InstanceOf Maybe);
 use namespace::clean;
 extends 'LWP::UserAgent';
