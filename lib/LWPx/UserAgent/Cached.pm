@@ -49,9 +49,6 @@ Inspiration for this class.
 
 use CHI;
 use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY HTTP_NOT_MODIFIED);
-
-# work around RT#43310
-## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
 use List::Util 1.33 'any';
 use Moo 1.004005;
 use Types::Standard qw(Bool HasMethods HashRef InstanceOf Maybe);
