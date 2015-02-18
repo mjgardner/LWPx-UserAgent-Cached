@@ -34,7 +34,7 @@ foreach my $i (@iter) {
 
 check_cache(@iter);
 
-diag("reversing page order");
+note 'reversing page order';
 
 check_cache( reverse @iter );
 
