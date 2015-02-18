@@ -28,6 +28,8 @@ L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but without
 inheriting from L<WWW::Mechanize|WWW::Mechanize>;
 instead it is just a direct subclass of
 L<LWP::UserAgent|LWP::UserAgent>.
+As of version 0.005 it has limited support for HTTP/1.1
+C<ETag>/C<If-None-Match> cache control headers.
 
 =head1 SEE ALSO
 
@@ -46,7 +48,7 @@ Inspiration for this class.
 =cut
 
 use CHI;
-use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
+use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY HTTP_NOT_MODIFIED);
 
 # work around RT#43310
 ## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
@@ -163,62 +165,102 @@ use L<LWP::UserAgent's C<handlers>|LWP::UserAgent/Handlers> method.
 sub BUILD {
     my $self = shift;
 
-    $self->add_handler(    # load from cache on each GET request
-        request_send => sub {
-            my $request = shift;
-            $self->_set_is_cached(0);
-            if ( not $self->ref_in_cache_key ) {
-                my $clone = $request->clone;
-                $clone->header( Referer => undef );
-                $request = $clone->as_string;
-            }
-
-            my $response = $self->cache->get($request);
-            $response
-                &&= sereal_decode_with_object( $self->_decoder, $response );
-
-            return
-                   if not($response)
-                or $response->code < HTTP_OK
-                or $response->code > HTTP_MOVED_PERMANENTLY;
-            $self->_set_is_cached(1);
-            return $response;
-        },
+    $self->add_handler(
+        request_send => $self->_closure_get_cache,
         ( m_method => 'GET' ),
     );
-
-    $self->add_handler(    # save to cache after successful GET
-        response_done => sub {
-            return if not my $response = shift;
-
-            if (not( $response->header('client-transfer-encoding')
-                    and 'ARRAY' eq
-                    ref $response->header('client-transfer-encoding')
-                    and any { 'chunked' eq $_ }
-                    @{ $response->header('client-transfer-encoding') } )
-                )
-            {
-                for ( $response->header('size') ) {
-                    return
-                        if not defined and $self->cache_undef_content_length;
-                    return
-                        if 0 == $_
-                        and not $self->cache_zero_content_length;
-                    return
-                        if $_ != length $response->content
-                        and not $self->cache_mismatch_content_length;
-                }
-            }
-
-            $response->decode;
-            $self->cache->set( $response->request->as_string =>
-                    sereal_encode_with_object( $self->_encoder, $response ) );
-            return;
-        },
+    $self->add_handler(
+        response_done => $self->_closure_set_cache,
         ( m_method => 'GET', m_code => 2 ),
+    );
+    $self->add_handler(
+        response_done => $self->_closure_not_modified,
+        ( m_code => HTTP_NOT_MODIFIED ),
     );
 
     return;
+}
+
+# load from cache on each GET request
+sub _closure_get_cache {
+    my $self = shift;
+    return sub {
+        my ($request) = @_;
+        $self->_set_is_cached(0);
+        if ( not $self->ref_in_cache_key ) {
+            my $clone = $request->clone;
+            $clone->header( Referer => undef );
+            $request = $clone->as_string;
+        }
+
+        my $response = $self->cache->get("$request");
+        $response &&= sereal_decode_with_object( $self->_decoder, $response );
+        return if not $response;
+
+        my $etag;
+        if ( $etag = $response->header('etag') ) {
+            $_[0]->header( if_none_match => $etag );
+        }
+
+        return
+               if $etag
+            or $response->code < HTTP_OK
+            or $response->code > HTTP_MOVED_PERMANENTLY;
+        $self->_set_is_cached(1);
+        return $response;
+    };
+}
+
+# save to cache after successful GET
+sub _closure_set_cache {
+    my $self = shift;
+    return sub {
+        return if not my $response = shift;
+
+        if (not( $response->header('client-transfer-encoding')
+                and 'ARRAY' eq
+                ref $response->header('client-transfer-encoding')
+                and any { 'chunked' eq $_ }
+                @{ $response->header('client-transfer-encoding') } )
+            )
+        {
+            for ( $response->header('size') ) {
+                return
+                    if not defined and $self->cache_undef_content_length;
+                return
+                    if 0 == $_
+                    and not $self->cache_zero_content_length;
+                return
+                    if $_ != length $response->content
+                    and not $self->cache_mismatch_content_length;
+            }
+        }
+
+        $response->decode;
+        $self->cache->set( $response->request->as_string =>
+                sereal_encode_with_object( $self->_encoder, $response ) );
+        return;
+    };
+}
+
+# handle HTTP 304 response, possibly from cache
+sub _closure_not_modified {
+    my $self = shift;
+    return sub {
+        my $request = $_[0]->request;
+        $self->_set_is_cached(0);
+
+        $request->header( if_none_match => undef );
+        my $response = $self->cache->get( $request->as_string );
+        $response &&= sereal_decode_with_object( $self->_decoder, $response );
+        if ( not $response ) {
+            $request->header( if_none_match => undef );
+            $response = $self->request($request);
+        }
+
+        $self->_set_is_cached(1);
+        $_[0] = $response;
+    };
 }
 
 =for Pod::Coverage FOREIGNBUILDARGS
