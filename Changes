@@ -3,7 +3,7 @@ Revision history for perl distribution LWPx-UserAgent-Role-Cached
 {{$NEXT}}
 
 0.005     2015-02-17 22:59:02-05:00 America/New_York (TRIAL RELEASE)
-    - add preliminary ETags cache control support
+    - add preliminary ETag cache control support
 0.004     2015-02-12 22:55:49-05:00 America/New_York
     - require newer version of Moo's Sub::Quote to get the qsub function
 0.003     2015-02-11 22:15:47-05:00 America/New_York
