@@ -53,9 +53,7 @@ use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY HTTP_NOT_MODIFIED);
 # work around RT#43310
 ## no critic (Subroutines::ProhibitCallsToUndeclaredSubs)
 use List::Util 1.33 'any';
-use Sereal qw(sereal_encode_with_object sereal_decode_with_object);
 use Moo 1.004005;
-use Sub::Quote 1.005000 'qsub';
 use Types::Standard qw(Bool HasMethods HashRef InstanceOf Maybe);
 use namespace::clean;
 extends 'LWP::UserAgent';
@@ -75,9 +73,10 @@ has cache => (
     isa     => HasMethods [qw(get set)],
     default => sub {
         CHI->new(
-            driver    => 'RawMemory',
-            datastore => $_[0]->_cache_datastore,
-            namespace => __PACKAGE__,
+            serializer => 'Sereal',
+            driver     => 'RawMemory',
+            datastore  => $_[0]->_cache_datastore,
+            namespace  => __PACKAGE__,
         );
     },
 );
@@ -143,14 +142,6 @@ inclusive) or cache everything. Defaults to true.
 
 has positive_cache => ( is => 'rw', isa => Bool, default => 1 );
 
-for (qw(Encoder Decoder)) {
-    has "_\l$_" => (
-        is      => 'lazy',
-        isa     => InstanceOf ["Sereal::$_"],
-        default => qsub "Sereal::$_->new",
-    );
-}
-
 =head1 HANDLERS
 
 This module works by adding C<request_send> and C<response_done>
@@ -187,15 +178,14 @@ sub _closure_get_cache {
     return sub {
         my ($request) = @_;
         $self->_set_is_cached(0);
+
         if ( not $self->ref_in_cache_key ) {
             my $clone = $request->clone;
             $clone->header( Referer => undef );
             $request = $clone->as_string;
         }
 
-        my $response = $self->cache->get("$request");
-        $response &&= sereal_decode_with_object( $self->_decoder, $response );
-        return if not $response;
+        return if not my $response = $self->cache->get("$request");
 
         my $etag;
         if ( $etag = $response->header('etag') ) {
@@ -237,8 +227,7 @@ sub _closure_set_cache {
         }
 
         $response->decode;
-        $self->cache->set( $response->request->as_string =>
-                sereal_encode_with_object( $self->_encoder, $response ) );
+        $self->cache->set( $response->request->as_string => $response );
         return;
     };
 }
@@ -252,7 +241,6 @@ sub _closure_not_modified {
 
         $request->header( if_none_match => undef );
         my $response = $self->cache->get( $request->as_string );
-        $response &&= sereal_decode_with_object( $self->_decoder, $response );
         if ( not $response ) {
             $request->header( if_none_match => undef );
             $response = $self->request($request);

@@ -1,7 +1,5 @@
 package TestCache;
 
-use Sereal qw(encode_sereal decode_sereal);
-
 sub new {
     my $class = shift;
 
@@ -15,17 +13,15 @@ sub new {
 sub set {
     my $self  = shift;
     my $key   = shift;
-    my $value = shift;    # an HTTP::Response
-
-    my $res = decode_sereal($value);
+    my $value = shift;           # an HTTP::Response
+    my $res   = $value->clone;
     $res->content("DUMMY");
-    $self->{$key} = encode_sereal($res);
+    $self->{$key} = $res;
 }
 
 sub get {
     my $self = shift;
     my $key  = shift;
-
     return $self->{$key};
 }
 
