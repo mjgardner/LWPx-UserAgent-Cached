@@ -151,12 +151,9 @@ use L<LWP::UserAgent's C<handlers>|LWP::UserAgent/Handlers> method.
 sub BUILD {
     my $self = shift;
 
+    $self->add_handler( request_send => \&_get_cache, ( m_method => 'GET' ) );
     $self->add_handler(
-        request_send => $self->_closure_get_cache,
-        ( m_method => 'GET' ),
-    );
-    $self->add_handler(
-        response_done => $self->_closure_set_cache,
+        response_done => \&_set_cache,
         ( m_method => 'GET', m_code => 2 ),
     );
 
@@ -164,57 +161,47 @@ sub BUILD {
 }
 
 # load from cache on each GET request
-sub _closure_get_cache {
-    my $self = shift;
-    return sub {
-        my ($request) = @_;
-        $self->_set_is_cached(0);
+sub _get_cache {
+    my ( $request, $self ) = @_;
 
-        if ( not $self->ref_in_cache_key ) {
-            my $clone = $request->clone;
-            $clone->header( Referer => undef );
-            $request = $clone->as_string;
-        }
+    $self->_set_is_cached(0);
+    my $clone = $request->clone;
+    if ( not $self->ref_in_cache_key ) { $clone->header( Referer => undef ) }
+    return if not my $response = $self->cache->get( $clone->as_string );
 
-        return if not my $response = $self->cache->get("$request");
-
-        return
-            if $response->code < HTTP_OK
-            or $response->code > HTTP_MOVED_PERMANENTLY;
-        $self->_set_is_cached(1);
-        return $response;
-    };
+    return
+        if $response->code < HTTP_OK
+        or $response->code > HTTP_MOVED_PERMANENTLY;
+    $self->_set_is_cached(1);
+    return $response;
 }
 
 # save to cache after successful GET
-sub _closure_set_cache {
-    my $self = shift;
-    return sub {
-        return if not my $response = shift;
+sub _set_cache {
+    my ( $response, $self ) = @_;
+    return if not $response;
 
-        if (not( $response->header('client-transfer-encoding')
-                and 'ARRAY' eq
-                ref $response->header('client-transfer-encoding')
-                and any { 'chunked' eq $_ }
-                @{ $response->header('client-transfer-encoding') } )
-            )
-        {
-            for ( $response->header('size') ) {
-                return
-                    if not defined and $self->cache_undef_content_length;
-                return
-                    if 0 == $_
-                    and not $self->cache_zero_content_length;
-                return
-                    if $_ != length $response->content
-                    and not $self->cache_mismatch_content_length;
-            }
+    if (not(    $response->header('client-transfer-encoding')
+            and 'ARRAY' eq ref $response->header('client-transfer-encoding')
+            and any { 'chunked' eq $_ }
+            @{ $response->header('client-transfer-encoding') } )
+        )
+    {
+        for ( $response->header('size') ) {
+            return
+                if not defined and $self->cache_undef_content_length;
+            return
+                if 0 == $_
+                and not $self->cache_zero_content_length;
+            return
+                if $_ != length $response->content
+                and not $self->cache_mismatch_content_length;
         }
+    }
 
-        $response->decode;
-        $self->cache->set( $response->request->as_string => $response );
-        return;
-    };
+    $response->decode;
+    $self->cache->set( $response->request->as_string => $response );
+    return;
 }
 
 =for Pod::Coverage FOREIGNBUILDARGS
