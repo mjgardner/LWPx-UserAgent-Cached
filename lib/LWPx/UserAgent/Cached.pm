@@ -28,8 +28,6 @@ L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but without
 inheriting from L<WWW::Mechanize|WWW::Mechanize>;
 instead it is just a direct subclass of
 L<LWP::UserAgent|LWP::UserAgent>.
-As of version 0.005 it has limited support for HTTP/1.1
-C<ETag>/C<If-None-Match> cache control headers.
 
 =head1 SEE ALSO
 
@@ -48,7 +46,7 @@ Inspiration for this class.
 =cut
 
 use CHI;
-use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY HTTP_NOT_MODIFIED);
+use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
 use List::Util 1.33 'any';
 use Moo 1.004005;
 use Types::Standard qw(Bool HasMethods HashRef InstanceOf Maybe);
@@ -161,10 +159,6 @@ sub BUILD {
         response_done => $self->_closure_set_cache,
         ( m_method => 'GET', m_code => 2 ),
     );
-    $self->add_handler(
-        response_done => $self->_closure_not_modified,
-        ( m_code => HTTP_NOT_MODIFIED ),
-    );
 
     return;
 }
@@ -184,14 +178,8 @@ sub _closure_get_cache {
 
         return if not my $response = $self->cache->get("$request");
 
-        my $etag;
-        if ( $etag = $response->header('etag') ) {
-            $_[0]->header( if_none_match => $etag );
-        }
-
         return
-               if $etag
-            or $response->code < HTTP_OK
+            if $response->code < HTTP_OK
             or $response->code > HTTP_MOVED_PERMANENTLY;
         $self->_set_is_cached(1);
         return $response;
@@ -226,25 +214,6 @@ sub _closure_set_cache {
         $response->decode;
         $self->cache->set( $response->request->as_string => $response );
         return;
-    };
-}
-
-# handle HTTP 304 response, possibly from cache
-sub _closure_not_modified {
-    my $self = shift;
-    return sub {
-        my $request = $_[0]->request;
-        $self->_set_is_cached(0);
-
-        $request->header( if_none_match => undef );
-        my $response = $self->cache->get( $request->as_string );
-        if ( not $response ) {
-            $request->header( if_none_match => undef );
-            $response = $self->request($request);
-        }
-
-        $self->_set_is_cached(1);
-        $_[0] = $response;
     };
 }
 
