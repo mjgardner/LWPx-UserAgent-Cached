@@ -25,6 +25,8 @@ This module borrows the caching logic from
 inheriting from [WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize);
 instead it is just a direct subclass of
 [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent).
+As of version 0.006 it has limited support for HTTP/1.1
+`ETag`/`If-None-Match` cache control headers.
 
 # ATTRIBUTES
 

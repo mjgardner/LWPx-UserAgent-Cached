@@ -28,6 +28,8 @@ L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but without
 inheriting from L<WWW::Mechanize|WWW::Mechanize>;
 instead it is just a direct subclass of
 L<LWP::UserAgent|LWP::UserAgent>.
+As of version 0.006 it has limited support for HTTP/1.1
+C<ETag>/C<If-None-Match> cache control headers.
 
 =head1 SEE ALSO
 
@@ -46,7 +48,7 @@ Inspiration for this class.
 =cut
 
 use CHI;
-use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY);
+use HTTP::Status qw(HTTP_OK HTTP_MOVED_PERMANENTLY HTTP_NOT_MODIFIED);
 use List::Util 1.33 'any';
 use Moo 1.004005;
 use Types::Standard qw(Bool HasMethods HashRef InstanceOf Maybe);
@@ -156,6 +158,10 @@ sub BUILD {
         response_done => \&_set_cache,
         ( m_method => 'GET', m_code => 2 ),
     );
+    $self->add_handler(
+        response_header => \&_get_not_modified,
+        ( m_method => 'GET', m_code => HTTP_NOT_MODIFIED ),
+    );
 
     return;
 }
@@ -163,17 +169,35 @@ sub BUILD {
 # load from cache on each GET request
 sub _get_cache {
     my ( $request, $self ) = @_;
-
     $self->_set_is_cached(0);
+
     my $clone = $request->clone;
     if ( not $self->ref_in_cache_key ) { $clone->header( Referer => undef ) }
     return if not my $response = $self->cache->get( $clone->as_string );
-
     return
         if $response->code < HTTP_OK
         or $response->code > HTTP_MOVED_PERMANENTLY;
     $self->_set_is_cached(1);
+
+    if ( $response->header('etag') ) {
+        $clone->header( if_none_match => $response->header('etag') );
+        $response = $self->request($clone);
+    }
+
     return $response;
+}
+
+sub _get_not_modified {
+    my ( $response, $self ) = @_;
+    $self->_set_is_cached(0);
+
+    my $request = $response->request->clone;
+    $request->remove_header(qw(if_modified_since if_none_match));
+
+    my $cached_response = $self->cache->get( $request->as_string );
+    $response->content( $cached_response->decoded_content );
+    $self->_set_is_cached(1);
+    return;
 }
 
 # save to cache after successful GET
@@ -200,6 +224,7 @@ sub _set_cache {
     }
 
     $response->decode;
+    $response->remove_content_headers;
     $self->cache->set( $response->request->as_string => $response );
     return;
 }
