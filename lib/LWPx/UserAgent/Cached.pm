@@ -173,18 +173,20 @@ sub _get_cache {
 
     my $clone = $request->clone;
     if ( not $self->ref_in_cache_key ) { $clone->header( Referer => undef ) }
+    return if $self->_no_cache_header_directives($request);
+
     return if not my $response = $self->cache->get( $clone->as_string );
     return
         if $response->code < HTTP_OK
         or $response->code > HTTP_MOVED_PERMANENTLY;
-    $self->_set_is_cached(1);
 
     if ( $response->header('etag') ) {
-        $self->_set_is_cached(0);
         $clone->header( if_none_match => $response->header('etag') );
         $response = $self->request($clone);
     }
+    return if $self->_no_cache_header_directives($response);
 
+    $self->_set_is_cached(1);
     return $response;
 }
 
@@ -197,6 +199,7 @@ sub _get_not_modified {
 
     my $cached_response = $self->cache->get( $request->as_string );
     $response->content( $cached_response->decoded_content );
+
     $self->_set_is_cached(1);
     return;
 }
@@ -224,16 +227,23 @@ sub _set_cache {
         }
     }
 
-    if ( my @cache_control = $response->header('cache_control') ) {
-        return if any {/\A no-store /xms} @cache_control;
-    }
-    if ( my @cache_control = $response->request->header('cache_control') ) {
-        return if any {/\A no-store /xms} @cache_control;
+    for my $message ( $response, $response->request ) {
+        return if $self->_no_cache_header_directives($message);
     }
 
     $response->decode;
     $response->remove_content_headers;
     $self->cache->set( $response->request->as_string => $response );
+    return;
+}
+
+sub _no_cache_header_directives {
+    my ( $self, $message ) = @_;
+    for my $header_name (qw(pragma cache_control)) {
+        if ( my @directives = $message->header($header_name) ) {
+            return 1 if any {/\A no- (?: cache | store ) /xms} @directives;
+        }
+    }
     return;
 }
 
