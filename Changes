@@ -3,6 +3,9 @@ Revision history for perl distribution LWPx-UserAgent-Role-Cached
 {{$NEXT}}
     - use CHI's built-in serializer support by default (with Sereal) instead
       of serializing in the UserAgent
+    - fix and fully test ETag support
+    - add support for no-cache and no-store Cache-Control request and response
+      headers, and Pragma: no-cache request header
 0.005     2015-02-17 22:59:02-05:00 America/New_York (TRIAL RELEASE)
     - add preliminary ETag cache control support
 0.004     2015-02-12 22:55:49-05:00 America/New_York

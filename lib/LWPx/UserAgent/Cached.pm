@@ -28,8 +28,13 @@ L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but without
 inheriting from L<WWW::Mechanize|WWW::Mechanize>;
 instead it is just a direct subclass of
 L<LWP::UserAgent|LWP::UserAgent>.
-As of version 0.006 it has limited support for HTTP/1.1
-C<ETag>/C<If-None-Match> cache control headers.
+
+=head2 HTTP/1.1 cache operation
+
+Full HTTP/1.1 cache compliance is a work in progress. As of version 0.006 we
+have limited support for HTTP/1.1 C<ETag>/C<If-None-Match> headers, as well as
+C<no-cache> and C<no-store> C<Cache-Control> directives (both on request and
+response) and the C<Pragma: no-cache> request header.
 
 =head1 SEE ALSO
 
