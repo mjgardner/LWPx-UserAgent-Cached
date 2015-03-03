@@ -223,6 +223,13 @@ sub _set_cache {
         }
     }
 
+    if ( my @cache_control = $response->header('cache_control') ) {
+        return if any {/\A no-store /xms} @cache_control;
+    }
+    if ( my @cache_control = $response->request->header('cache_control') ) {
+        return if any {/\A no-store /xms} @cache_control;
+    }
+
     $response->decode;
     $response->remove_content_headers;
     $self->cache->set( $response->request->as_string => $response );
