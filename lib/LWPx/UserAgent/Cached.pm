@@ -24,9 +24,10 @@ use utf8;
 =head1 DESCRIPTION
 
 This module borrows the caching logic from
-L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but without
-inheriting from L<WWW::Mechanize|WWW::Mechanize>;
-instead it is just a direct subclass of
+L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but
+without inheriting from
+L<WWW::Mechanize|WWW::Mechanize>; instead it is just
+a direct subclass of
 L<LWP::UserAgent|LWP::UserAgent>.
 
 =head2 HTTP/1.1 cache operation
@@ -63,10 +64,10 @@ extends 'LWP::UserAgent';
 =attr cache
 
 Settable at construction, defaults to using
-L<CHI::Driver::RawMemory|CHI::Driver::RawMemory> with an
-instance-specific hash datastore and a namespace with the current package name.
-You can use your own caching object here as long as it has C<get> and
-C<set> methods.
+L<CHI::Driver::RawMemory|CHI::Driver::RawMemory> with
+an instance-specific hash datastore and a namespace with the current
+package name. You can use your own caching object here as long as it has
+C<get> and C<set> methods.
 
 =cut
 
@@ -146,10 +147,11 @@ has positive_cache => ( is => 'rw', isa => Bool, default => 1 );
 
 =head1 HANDLERS
 
-This module works by adding C<request_send> and C<response_done>
-L<handlers|LWP::UserAgent/Handlers> method that run on successful
-HTTP C<GET> requests. If you need to modify or remove these handlers you may
-use L<LWP::UserAgent's C<handlers>|LWP::UserAgent/Handlers> method.
+This module works by adding C<request_send>, C<response_done> and
+C<response_header> L<handlers|LWP::UserAgent/Handlers>
+that run on successful HTTP C<GET> requests.
+If you need to modify or remove these handlers you may use LWP::UserAgent's
+L<handler-related methods|LWP::UserAgent/Handlers>.
 
 =for Pod::Coverage BUILD
 

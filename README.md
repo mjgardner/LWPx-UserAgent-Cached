@@ -4,7 +4,7 @@ LWPx::UserAgent::Cached - Subclass of LWP::UserAgent that caches HTTP GET reques
 
 # VERSION
 
-version 0.006
+version 0.007
 
 # SYNOPSIS
 
@@ -21,9 +21,10 @@ version 0.006
 # DESCRIPTION
 
 This module borrows the caching logic from
-[WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached) but without
-inheriting from [WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize);
-instead it is just a direct subclass of
+[WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached) but
+without inheriting from
+[WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize); instead it is just
+a direct subclass of
 [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent).
 
 ## HTTP/1.1 cache operation
@@ -38,10 +39,10 @@ response) and the `Pragma: no-cache` request header.
 ## cache
 
 Settable at construction, defaults to using
-[CHI::Driver::RawMemory](https://metacpan.org/pod/CHI::Driver::RawMemory) with an
-instance-specific hash datastore and a namespace with the current package name.
-You can use your own caching object here as long as it has `get` and
-`set` methods.
+[CHI::Driver::RawMemory](https://metacpan.org/pod/CHI::Driver::RawMemory) with
+an instance-specific hash datastore and a namespace with the current
+package name. You can use your own caching object here as long as it has
+`get` and `set` methods.
 
 ## is\_cached
 
@@ -88,10 +89,11 @@ inclusive) or cache everything. Defaults to true.
 
 # HANDLERS
 
-This module works by adding `request_send` and `response_done`
-[handlers](https://metacpan.org/pod/LWP::UserAgent#Handlers) method that run on successful
-HTTP `GET` requests. If you need to modify or remove these handlers you may
-use [LWP::UserAgent's `handlers`](https://metacpan.org/pod/LWP::UserAgent#Handlers) method.
+This module works by adding `request_send`, `response_done` and
+`response_header` [handlers](https://metacpan.org/pod/LWP::UserAgent#Handlers)
+that run on successful HTTP `GET` requests.
+If you need to modify or remove these handlers you may use LWP::UserAgent's
+[handler-related methods](https://metacpan.org/pod/LWP::UserAgent#Handlers).
 
 # SUPPORT
 
