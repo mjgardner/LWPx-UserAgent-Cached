@@ -180,6 +180,7 @@ sub _get_cache {
     $self->_set_is_cached(1);
 
     if ( $response->header('etag') ) {
+        $self->_set_is_cached(0);
         $clone->header( if_none_match => $response->header('etag') );
         $response = $self->request($clone);
     }
