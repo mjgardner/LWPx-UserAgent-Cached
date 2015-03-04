@@ -1,7 +1,7 @@
 Revision history for perl distribution LWPx-UserAgent-Role-Cached
 
 {{$NEXT}}
-
+    - documentation and metadata fixes, no functional changes
 0.006     2015-03-03 13:34:06-05:00 America/New_York
     - use CHI's built-in serializer support by default (with Sereal) instead
       of serializing in the UserAgent
