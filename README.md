@@ -21,11 +21,11 @@ version 0.008
 # DESCRIPTION
 
 This module borrows the caching logic from
-[WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached) but
+[`WWW::Mechanize::Cached`](https://metacpan.org/pod/WWW::Mechanize::Cached) but
 without inheriting from
-[WWW::Mechanize](https://metacpan.org/pod/WWW::Mechanize); instead it is just
+[`WWW::Mechanize`](https://metacpan.org/pod/WWW::Mechanize); instead it is just
 a direct subclass of
-[LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent).
+[`LWP::UserAgent`](https://metacpan.org/pod/LWP::UserAgent).
 
 ## HTTP/1.1 cache operation
 
@@ -39,7 +39,7 @@ response) and the `Pragma: no-cache` request header.
 ## cache
 
 Settable at construction, defaults to using
-[CHI::Driver::RawMemory](https://metacpan.org/pod/CHI::Driver::RawMemory) with
+[`CHI::Driver::RawMemory`](https://metacpan.org/pod/CHI::Driver::RawMemory) with
 an instance-specific hash datastore and a namespace with the current
 package name. You can use your own caching object here as long as it has
 `get` and `set` methods.
@@ -77,10 +77,6 @@ Settable at construction or anytime thereafter, indicates whether we should
 only cache positive responses (HTTP response codes from `200` to `300`
 inclusive) or cache everything. Defaults to true.
 
-# EXTENDS
-
-- [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent)
-
 # REQUIRES
 
 - [CHI](https://metacpan.org/pod/CHI)
@@ -91,11 +87,11 @@ inclusive) or cache everything. Defaults to true.
 
 # SEE ALSO
 
-- [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent)
+- [`LWP::UserAgent`](https://metacpan.org/pod/LWP::UserAgent)
 
     Parent of this class.
 
-- [WWW::Mechanize::Cached](https://metacpan.org/pod/WWW::Mechanize::Cached)
+- [`WWW::Mechanize::Cached`](https://metacpan.org/pod/WWW::Mechanize::Cached)
 
     Inspiration for this class.
 

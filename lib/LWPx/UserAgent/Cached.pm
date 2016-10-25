@@ -24,11 +24,11 @@ our $VERSION = '0.008';
 =head1 DESCRIPTION
 
 This module borrows the caching logic from
-L<WWW::Mechanize::Cached|WWW::Mechanize::Cached> but
+L<C<WWW::Mechanize::Cached>|WWW::Mechanize::Cached> but
 without inheriting from
-L<WWW::Mechanize|WWW::Mechanize>; instead it is just
+L<C<WWW::Mechanize>|WWW::Mechanize>; instead it is just
 a direct subclass of
-L<LWP::UserAgent|LWP::UserAgent>.
+L<C<LWP::UserAgent>|LWP::UserAgent>.
 
 =head2 HTTP/1.1 cache operation
 
@@ -41,11 +41,11 @@ response) and the C<Pragma: no-cache> request header.
 
 =over
 
-=item L<LWP::UserAgent|LWP::UserAgent>
+=item L<C<LWP::UserAgent>|LWP::UserAgent>
 
 Parent of this class.
 
-=item L<WWW::Mechanize::Cached|WWW::Mechanize::Cached>
+=item L<C<WWW::Mechanize::Cached>|WWW::Mechanize::Cached>
 
 Inspiration for this class.
 
@@ -64,7 +64,7 @@ extends 'LWP::UserAgent';
 =attr cache
 
 Settable at construction, defaults to using
-L<CHI::Driver::RawMemory|CHI::Driver::RawMemory> with
+L<C<CHI::Driver::RawMemory>|CHI::Driver::RawMemory> with
 an instance-specific hash datastore and a namespace with the current
 package name. You can use your own caching object here as long as it has
 C<get> and C<set> methods.
