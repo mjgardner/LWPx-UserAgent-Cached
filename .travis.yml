@@ -9,6 +9,6 @@ before_install:
   - sudo apt-get install -qq unzip
   - git config --global github.user mjgardner
   - cpanm Dist::Zilla
-  - dzil authordeps | xargs cpanm --verbose
-install: dzil listdeps | xargs cpanm --verbose
+  - dzil authordeps --missing | xargs cpanm
+install: dzil listdeps --missing | xargs cpanm
 script: dzil test --all --verbose
