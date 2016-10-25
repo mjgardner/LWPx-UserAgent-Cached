@@ -77,6 +77,18 @@ Settable at construction or anytime thereafter, indicates whether we should
 only cache positive responses (HTTP response codes from `200` to `300`
 inclusive) or cache everything. Defaults to true.
 
+# EXTENDS
+
+- [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent)
+
+# REQUIRES
+
+- [CHI](https://metacpan.org/pod/CHI)
+- [HTTP::Status](https://metacpan.org/pod/HTTP::Status)
+- [Moo](https://metacpan.org/pod/Moo)
+- [Types::Standard](https://metacpan.org/pod/Types::Standard)
+- [namespace::clean](https://metacpan.org/pod/namespace::clean)
+
 # SEE ALSO
 
 - [LWP::UserAgent](https://metacpan.org/pod/LWP::UserAgent)
