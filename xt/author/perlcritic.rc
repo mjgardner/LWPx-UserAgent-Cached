@@ -5,7 +5,6 @@ exclude = CodeLayout::ProhibitHashBarewords Perl::Critic::Policy::Documentation:
 [CodeLayout::RequireTidyCode]
 perltidyrc = xt/author/perltidy.rc
 
-# using Modern::Perl
 [Compatibility::PerlMinimumVersionAndWhy]
 above_version = 5.012
 [Compatibility::PodMinimumVersion]
@@ -19,13 +18,7 @@ lib_sections = NAME | VERSION | SYNOPSIS | DESCRIPTION | SUPPORT | AUTHOR | COPY
 script_sections = NAME | USAGE | DESCRIPTION | CONFIGURATION | SUPPORT | AUTHOR | COPYRIGHT AND LICENSE
 
 [Subroutines::ProhibitCallsToUndeclaredSubs]
-exempt_subs = Const::Fast::const Moo::has Moo::extends
+exempt_subs = Moo::has Moo::extends
 
 [Subroutines::ProhibitUnusedPrivateSubroutines]
 private_name_regex = _(?!build_)\w+
-
-[TestingAndDebugging::RequireUseStrict]
-equivalent_modules = Modern::Perl
-
-[TestingAndDebugging::RequireUseWarnings]
-equivalent_modules = Modern::Perl

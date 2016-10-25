@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
-use Modern::Perl '2011';
+use strict;
+use warnings;
 use English '-no_match_vars';
 use HTTP::Status qw(HTTP_OK HTTP_NOT_MODIFIED);
 use Test::More tests => 2;

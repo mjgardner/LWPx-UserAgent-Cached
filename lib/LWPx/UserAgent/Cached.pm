@@ -2,7 +2,8 @@ package LWPx::UserAgent::Cached;
 
 # ABSTRACT: Subclass of LWP::UserAgent that caches HTTP GET requests
 
-use Modern::Perl '2011';    ## no critic (Modules::ProhibitUseQuotedVersion)
+use strict;
+use warnings;
 
 # VERSION
 use utf8;
