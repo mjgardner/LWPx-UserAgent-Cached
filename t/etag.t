@@ -2,15 +2,14 @@
 
 use Modern::Perl '2011';
 use English '-no_match_vars';
-use Const::Fast;
 use Digest::SHA;
 use HTTP::Status qw(HTTP_OK HTTP_NOT_MODIFIED);
 use Test::More;
 use Test::Fake::HTTPD;
 use LWPx::UserAgent::Cached;
 
-const my $CONTENT => 'Hello world!';
-const my $ETAG    => Digest::SHA->new(256)->add($CONTENT)->hexdigest;
+my $CONTENT = 'Hello world!';
+my $ETAG    = Digest::SHA->new(256)->add($CONTENT)->hexdigest;
 
 my $httpd = Test::Fake::HTTPD->new( $PERLDB ? ( timeout => undef ) : () );
 

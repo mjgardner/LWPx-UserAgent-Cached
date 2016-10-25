@@ -8,7 +8,6 @@ use lib 't';
 
 use Find::Lib;
 use File::Spec;
-use Path::Class qw(file);
 use Test::More tests => 64;
 use TestCache;
 

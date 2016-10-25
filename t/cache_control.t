@@ -2,7 +2,6 @@
 
 use Modern::Perl '2011';
 use English '-no_match_vars';
-use Const::Fast;
 use HTTP::Status qw(HTTP_OK HTTP_NOT_MODIFIED);
 use Test::More tests => 2;
 use Test::Fake::HTTPD;
