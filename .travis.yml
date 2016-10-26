@@ -1,14 +1,18 @@
+sudo: false
 language: perl
 perl:
   - "5.24"
   - "5.22"
   - "5.20"
   - "5.18"
+matrix:
+  include:
+    - perl: 5.24
+      env: COVERAGE=1
+addons:
+  apt:
+    packages:
+      - unzip
 before_install:
-  - "sudo apt-get update -qq"
-  - "sudo apt-get install -qq unzip"
-  - "git config --global github.user mjgardner"
-  - "cpanm Dist::Zilla"
-  - "dzil authordeps --missing | xargs cpanm"
-install: "dzil listdeps --missing | xargs cpanm"
-script: "dzil test --all --verbose"
+  - git config --global github.user mjgardner
+  - eval $(curl https://travis-perl.github.io/init) --auto
