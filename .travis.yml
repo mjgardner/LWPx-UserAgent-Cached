@@ -1,5 +1,7 @@
 sudo: false
 language: perl
+env:
+  secure: "LZoWXHKHdC0ceYJljIv+WB9m0N7qaoLrYdxZRswcMoQW9EGVlIWoUmnD5CWoW25gQ+hTGD7wZLI+7fy4MsWJiFufwjVnqy3GzNDPv2J0atPZ3zGYOIVlongxWmzlqt4Bdug9Vlp99J7AI1//KBmV8BRkLg2mibDkySE4IEh5xMY="
 perl:
   - "5.22@moo"
   - "5.20@moo"
@@ -13,4 +15,5 @@ matrix:
       env: COVERAGE=1
 before_install:
   - git config --global github.user mjgardner
-  - eval $(curl https://travis-perl.github.io/init) --auto
+  - git config --global github.password ${GITHUB_TRAVIS_TOKEN:?}
+  - eval $(curl -u mjgardner:${GITHUB_TRAVIS_TOKEN:?} https://travis-perl.github.io/init) --auto
