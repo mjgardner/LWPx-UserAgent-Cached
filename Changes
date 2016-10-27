@@ -1,6 +1,8 @@
 Revision history for perl distribution LWPx-UserAgent-Role-Cached
 
 {{$NEXT}}
+
+0.008     2016-10-27 00:29:55-05:00 America/Chicago
     - more correctly handle HTTP Client-Transfer-Encoding: chunked
       headers
     - remove Modern::Perl from prerequisites

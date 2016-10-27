@@ -5,7 +5,7 @@ package LWPx::UserAgent::Cached;
 use strict;
 use warnings;
 use utf8;
-our $VERSION = '0.008';
+our $VERSION = '0.009';
 
 ## no critic (Bangs::ProhibitCommentedOutCode)
 
