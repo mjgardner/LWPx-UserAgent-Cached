@@ -1,7 +1,11 @@
 Revision history for perl distribution LWPx-UserAgent-Role-Cached
 
 {{$NEXT}}
-
+    - more correctly handle HTTP Client-Transfer-Encoding: chunked
+      headers
+    - remove Modern::Perl from prerequisites
+    - documentation tweaks (automatically generating list of
+      prerequisites, listing other Perl modules in monospace text)
 0.007     2015-03-04 17:06:36-05:00 America/New_York
     - documentation and metadata fixes, no functional changes
 0.006     2015-03-03 13:34:06-05:00 America/New_York
