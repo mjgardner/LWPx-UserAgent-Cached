@@ -216,10 +216,9 @@ sub _set_cache {
     my ( $response, $self ) = @_;
     return if not $response;
 
-    if (not(    $response->header('client-transfer-encoding')
-            and 'ARRAY' eq ref $response->header('client-transfer-encoding')
+    if (not($response->header('client-transfer-encoding')
             and any { 'chunked' eq $_ }
-            @{ $response->header('client-transfer-encoding') }
+            $response->header('client-transfer-encoding')
         )
         )
     {
