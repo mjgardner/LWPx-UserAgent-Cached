@@ -254,7 +254,6 @@ sub _set_cache {
     }
 
     $response->decode;
-    $response->remove_content_headers;
     $self->cache->set( $response->request->as_string => $response );
     return;
 }
