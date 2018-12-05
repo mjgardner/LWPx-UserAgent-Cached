@@ -4,7 +4,7 @@ LWPx::UserAgent::Cached - Subclass of LWP::UserAgent that caches HTTP GET reques
 
 # VERSION
 
-version 0.009
+version 0.010
 
 # SYNOPSIS
 
@@ -76,6 +76,17 @@ store the HTTP referrer in the cache key. Defaults to false.
 Settable at construction or anytime thereafter, indicates whether we should
 only cache positive responses (HTTP response codes from `200` to `300`
 inclusive) or cache everything. Defaults to true.
+
+## ignore\_headers
+
+Settable at construction or anytime thereafter, indicates whether we should
+ignore `Cache-Control: no-cache`, `Cache-Control: no-store`, and
+`Pragma: no-cache` HTTP headers when deciding whether to cache a response.
+Defaults to false.
+
+**Important note:** This option is potentially dangerous, as it ignores the
+explicit instructions from the server and thus can lead to returning stale
+content.
 
 # REQUIRES
 
