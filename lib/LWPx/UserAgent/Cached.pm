@@ -145,6 +145,21 @@ inclusive) or cache everything. Defaults to true.
 
 has positive_cache => ( is => 'rw', isa => Bool, default => 1 );
 
+=attr ignore_headers
+
+Settable at construction or anytime thereafter, indicates whether we should
+ignore C<Cache-Control: no-cache>, C<Cache-Control: no-store>, and
+C<Pragma: no-cache> HTTP headers when deciding whether to cache a response.
+Defaults to false.
+
+B<Important note:> This option is potentially dangerous, as it ignores the
+explicit instructions from the server and thus can lead to returning stale
+content.
+
+=cut
+
+has ignore_headers => ( is => 'rw', isa => Bool, default => 0 );
+
 =head1 HANDLERS
 
 This module works by adding C<request_send>, C<response_done> and
@@ -246,6 +261,8 @@ sub _set_cache {
 
 sub _no_cache_header_directives {
     my ( $self, $message ) = @_;
+    return if $self->ignore_headers;
+
     for my $header_name (qw(pragma cache_control)) {
         if ( my @directives = $message->header($header_name) ) {
             return 1 if any {/\A no- (?: cache | store ) /xms} @directives;
