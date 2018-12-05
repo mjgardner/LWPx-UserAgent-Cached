@@ -1,6 +1,8 @@
 Revision history for perl distribution LWPx-UserAgent-Role-Cached
 
 {{$NEXT}}
+
+0.010     2018-12-05 12:23:13-06:00 America/Chicago
     - add ignore_headers option to allow for aggressive caching that ignores
       response headers to the contrary
     - no longer strip content headers when caching; this was causing problems
