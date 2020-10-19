@@ -4,7 +4,7 @@ LWPx::UserAgent::Cached - Subclass of LWP::UserAgent that caches HTTP GET reques
 
 # VERSION
 
-version 0.010
+version 0.011
 
 # SYNOPSIS
 
@@ -21,11 +21,11 @@ version 0.010
 # DESCRIPTION
 
 This module borrows the caching logic from
-[`WWW::Mechanize::Cached`](https://metacpan.org/pod/WWW::Mechanize::Cached) but
+[`WWW::Mechanize::Cached`](https://metacpan.org/pod/WWW%3A%3AMechanize%3A%3ACached) but
 without inheriting from
-[`WWW::Mechanize`](https://metacpan.org/pod/WWW::Mechanize); instead it is just
+[`WWW::Mechanize`](https://metacpan.org/pod/WWW%3A%3AMechanize); instead it is just
 a direct subclass of
-[`LWP::UserAgent`](https://metacpan.org/pod/LWP::UserAgent).
+[`LWP::UserAgent`](https://metacpan.org/pod/LWP%3A%3AUserAgent).
 
 ## HTTP/1.1 cache operation
 
@@ -39,7 +39,7 @@ response) and the `Pragma: no-cache` request header.
 ## cache
 
 Settable at construction, defaults to using
-[`CHI::Driver::RawMemory`](https://metacpan.org/pod/CHI::Driver::RawMemory) with
+[`CHI::Driver::RawMemory`](https://metacpan.org/pod/CHI%3A%3ADriver%3A%3ARawMemory) with
 an instance-specific hash datastore and a namespace with the current
 package name. You can use your own caching object here as long as it has
 `get` and `set` methods.
@@ -91,28 +91,28 @@ content.
 # REQUIRES
 
 - [CHI](https://metacpan.org/pod/CHI)
-- [HTTP::Status](https://metacpan.org/pod/HTTP::Status)
+- [HTTP::Status](https://metacpan.org/pod/HTTP%3A%3AStatus)
 - [Moo](https://metacpan.org/pod/Moo)
-- [Types::Standard](https://metacpan.org/pod/Types::Standard)
-- [namespace::clean](https://metacpan.org/pod/namespace::clean)
+- [Types::Standard](https://metacpan.org/pod/Types%3A%3AStandard)
+- [namespace::clean](https://metacpan.org/pod/namespace%3A%3Aclean)
 
 # SEE ALSO
 
-- [`LWP::UserAgent`](https://metacpan.org/pod/LWP::UserAgent)
+- [`LWP::UserAgent`](https://metacpan.org/pod/LWP%3A%3AUserAgent)
 
     Parent of this class.
 
-- [`WWW::Mechanize::Cached`](https://metacpan.org/pod/WWW::Mechanize::Cached)
+- [`WWW::Mechanize::Cached`](https://metacpan.org/pod/WWW%3A%3AMechanize%3A%3ACached)
 
     Inspiration for this class.
 
 # HANDLERS
 
 This module works by adding `request_send`, `response_done` and
-`response_header` [handlers](https://metacpan.org/pod/LWP::UserAgent#Handlers)
+`response_header` [handlers](https://metacpan.org/pod/LWP%3A%3AUserAgent#Handlers)
 that run on successful HTTP `GET` requests.
 If you need to modify or remove these handlers you may use LWP::UserAgent's
-[handler-related methods](https://metacpan.org/pod/LWP::UserAgent#Handlers).
+[handler-related methods](https://metacpan.org/pod/LWP%3A%3AUserAgent#Handlers).
 
 # SUPPORT
 
@@ -132,24 +132,6 @@ in addition to those websites please use your favorite search engine to discover
     A modern, open-source CPAN search engine, useful to view POD in HTML format.
 
     [https://metacpan.org/release/LWPx-UserAgent-Cached](https://metacpan.org/release/LWPx-UserAgent-Cached)
-
-- Search CPAN
-
-    The default CPAN search engine, useful to view POD in HTML format.
-
-    [http://search.cpan.org/dist/LWPx-UserAgent-Cached](http://search.cpan.org/dist/LWPx-UserAgent-Cached)
-
-- AnnoCPAN
-
-    The AnnoCPAN is a website that allows community annotations of Perl module documentation.
-
-    [http://annocpan.org/dist/LWPx-UserAgent-Cached](http://annocpan.org/dist/LWPx-UserAgent-Cached)
-
-- CPAN Ratings
-
-    The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
-
-    [http://cpanratings.perl.org/d/LWPx-UserAgent-Cached](http://cpanratings.perl.org/d/LWPx-UserAgent-Cached)
 
 - CPANTS
 
@@ -199,7 +181,7 @@ Mark Gardner <mjgardner@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2018 by ZipRecruiter.
+This software is copyright (c) 2020 by ZipRecruiter.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
